@@ -94,11 +94,18 @@ def main():
             lb = b.pop("labels")
             with torch.amp.autocast("cuda", dtype=torch.bfloat16):
                 logits = model(**b).logits
-            (torch.nn.functional.cross_entropy(logits.float(), lb) / args.accum).backward()
+            loss = torch.nn.functional.cross_entropy(logits.float(), lb)
+            if not torch.isfinite(loss):
+                raise RuntimeError(
+                    f"[{args.tag}] step {step}에서 loss={loss.item()} (NaN/Inf) — 학습 발산. "
+                    "DeBERTa 계열은 transformers 5.12.1에서 backward가 깨짐 → 4.46.3 사용 필요. 즉시 중단.")
+            (loss / args.accum).backward()
             if (bi + 1) % args.accum == 0:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
                 opt.step(); sch.step(); opt.zero_grad()
                 step += 1
+                if step % 200 == 1:
+                    print(f"      step {step} loss={loss.item():.4f}", flush=True)
                 if args.smoke and step >= 60:
                     mem = torch.cuda.max_memory_allocated() / 1e9
                     sec = (time.time() - t) / step

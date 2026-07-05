@@ -1,8 +1,19 @@
-# GPU 담당 팀원용 (백본 bake-off: mDeBERTa / KR-ELECTRA / electra-kor)
-torch==2.11.0
-transformers==5.12.1
+# GPU 담당 팀원용 — 평가 서버와 '동일한' 버전으로 통일한다.
+#
+# 이유 2가지:
+#  1) DeBERTa 계열은 transformers 5.12.1에서 backward가 NaN 발산(팀A 발견·재현). 4.46.3에서 정상.
+#  2) 평가 서버가 transformers 4.46.3 / sklearn 1.8.0 / numpy 1.26.4 이므로, 학습도 여기 맞추면
+#     train-serve 버전 불일치가 원천 제거됨(제출 시 로드 오류 방지).
+#
+# 설치:
+#   pip install torch==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128
+#   pip install -r requirements_gpu.txt
+#   (GPU/드라이버가 cu128 미지원이면 torch==2.5.1+cu121 사용 — 4.46.3과 호환됨)
+
+transformers==4.46.3
+accelerate==1.9.0
+sentencepiece==0.1.99
 protobuf
-sentencepiece
-scikit-learn==1.9.0
-numpy==2.4.6
-scipy==1.17.1
+scikit-learn==1.8.0
+numpy==1.26.4
+scipy==1.15.3

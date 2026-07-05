@@ -1,3 +1,5 @@
 # CPU 담당 팀원용 (스택 forward-selection + isotonic 보정, GPU 불필요)
-scikit-learn==1.9.0
-numpy==2.4.6
+# 평가 서버와 동일 버전으로 통일 (아티팩트 로드 정합).
+scikit-learn==1.8.0
+numpy==1.26.4
+scipy==1.15.3
