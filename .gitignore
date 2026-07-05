@@ -1,0 +1,41 @@
+# 기본: 전부 무시 → 필요한 것만 화이트리스트로 허용
+# (submit/model 775MB, submissions/*.zip 6.9GB, colab_pkg 등은 절대 올리지 않음)
+/*
+!.gitignore
+!README.md
+!requirements_gpu.txt
+!requirements_cpu.txt
+!dacon_data/
+!train/
+
+# dacon_data: data/ 안의 지정 파일만 허용
+dacon_data/*
+!dacon_data/data/
+dacon_data/data/*
+!dacon_data/data/train.jsonl
+!dacon_data/data/train_labels.csv
+!dacon_data/data/test.jsonl
+!dacon_data/data/sample_submission.csv
+
+# train: 백본 bake-off / 스택 실험에 필요한 코드+OOF만 허용
+train/*
+!train/features.py
+!train/cv.py
+!train/bakeoff_fold0.py
+!train/prefetch_models.py
+!train/stack_v2.py
+!train/oof/
+train/oof/*
+!train/oof/oof_y.npy
+!train/oof/oof_ids.json
+!train/oof/m3_klue_oof.npy
+!train/oof/m1v2_oof.npy
+!train/oof/m2v3_oof.npy
+!train/oof/m2cat_oof.npy
+!train/oof/s1_oof.npy
+
+# 팀원이 로컬에서 생성할 결과물(각자 __pycache__, 새 fold0 npz 등)은 커밋 시 개별 add
+train/oof/*_fold0.npz
+train/__pycache__/
+**/__pycache__/
+*.pyc
